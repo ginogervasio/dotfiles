@@ -1,0 +1,59 @@
+alias l='ls -alth'
+
+if [ -n "$PS1" ]; then PS1='\h:\w \$ '; shopt -s checkwinsize; fi
+
+export DISPLAY=0.0
+
+export CLICOLOR=1
+
+export EDITOR=emacs
+
+export DEV_ROOT=$HOME
+
+export PYTHONPATH=$PYTHONPATH:~/.python/lib/python
+export ORIGPYTHONPATH=$PYTHONPATH
+export PYTHONSTARTUP=~/.pythonstartup.py
+export NODE_PATH=/opt/node_modules
+export LANG=en_US.UTF-8
+
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home
+export AKKA_HOME=/Library/akka-2.1.4
+export SCALA_HOME=/opt/local/share/scala-2.10
+export MYSQL_HOME=/usr/local/mysql
+export PATH=$PATH:~/.python/bin/:$JAVA_HOME/Home:$SCALA_HOME/bin:$MYSQL_HOME/bin
+
+function proxy {
+    ssh -C2qTnN -D $1 [USER@HOSTNAME]
+}
+
+function unsetPaths {
+     unset PRODROOT
+     unset CONFROOT
+     unset PYSRCROOT
+     unset PYTHONPATH
+     export PYTHONPATH=${ORIGPYTHONPATH}
+}
+
+function setPaths {
+     PROD=$1
+
+     unsetPaths
+
+     PRODROOT=${DEV_ROOT}/${PROD}
+     CONFROOT=${PRODROOT}/etc
+     PYSRCROOT=${PRODROOT}/src/python
+     PYTHONPATH=${PYTHONPATH}:${PYSRCROOT}
+     P=${PRODROOT}
+     FT_DEV_MODE=1
+     FT_DEV_PORT_BASE=58000
+
+     echo PROD=${PROD}
+     echo PRODROOT=${PRODROOT}
+     echo CONFROOT=${CONFROOT}
+     echo PYSRCROOT=${PYSRCROOT}
+     echo PYTHONPATH=${PYTHONPATH}
+
+     export PRODROOT PYSRCROOT CONFROOT PYTHONPATH
+}
+
+
